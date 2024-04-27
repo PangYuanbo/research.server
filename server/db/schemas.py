@@ -9,3 +9,5 @@ class UserUpdate(BaseModel):
 class UserCreate(BaseModel):
     name: str
     professor: bool
+
+
