@@ -4,7 +4,7 @@ from fastapi import Depends
 from sqlalchemy.orm import Session
 from propelauth_fastapi import init_auth
 import os
-from server.routers import datachange
+from server.routers import data
 from propelauth_py.user import User
 
 from server.db import schemas
@@ -16,4 +16,4 @@ auth = init_auth(PROPELAUTH_AUTH_URL, PROPELAUTH_API_KEY)
 
 
 app= FastAPI()
-app.include_router(datachange.router)
+app.include_router(data.router)

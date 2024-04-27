@@ -11,3 +11,9 @@ class UserCreate(BaseModel):
     professor: bool
 
 
+class User:
+    id: UUID4
+    name: str
+    professor: bool
+    class Config:
+        orm_mode = True
