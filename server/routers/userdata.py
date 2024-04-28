@@ -45,6 +45,8 @@ def read_user(user_id: UUID, db: Session = Depends(get_db)):
 
 
 @router.get("/users/", response_model=List[schemas.User])
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_users(page: int = 1, page_size: int = 10, db: Session = Depends(get_db)):
+    skip = (page - 1) * page_size
+    limit = page_size
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
