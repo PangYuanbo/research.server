@@ -24,10 +24,7 @@ def ai_research(need: str, researches: str):
                     "type": "object",
                     "properties": {
                         "research_ids": {
-                            "type": "list",
-                            "items": {
-                                "type": "uuid4"
-                            }
+                            "type": "list[uuid4]",
                         }
                     },
                     "required": ["research_ids"],
