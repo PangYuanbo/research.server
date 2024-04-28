@@ -7,11 +7,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi import Request
 from fastapi.responses import Response
 from propelauth_fastapi import init_auth, User as AuthUser
-from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
-
-from server.db.dependencies import get_db
-from server.db.model import Users
 
 load_dotenv()
 AUTH_URL = os.getenv("AUTH_URL")
@@ -31,22 +27,22 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-async def root(current_user: AuthUser = Depends(auth.require_user)):
-    return {"message": f"Hello {current_user.user_id}"}
+# @app.get("/")
+# async def root(current_user: AuthUser = Depends(auth.require_user)):
+#     return {"message": f"Hello {current_user.user_id}"}
 
 
-@app.get("/users/me")
-async def read_users_me(current_user: AuthUser = Depends(auth.require_user), db: Session = Depends(get_db)):
-    user_id = current_user.user_id
-    db_user = db.query(Users).where(Users.user_id == user_id).first()
-    if db_user is None:
-        # create a new user
-        db_user = Users(user_id=user_id)
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
-    return db_user
+# @app.get("/users/me")
+# async def read_users_me(current_user: AuthUser = Depends(auth.require_user), db: Session = Depends(get_db)):
+#     user_id = current_user.user_id
+#     db_user = db.query(Users).where(Users.user_id == user_id).first()
+#     if db_user is None:
+#         # create a new user
+#         db_user = Users(user_id=user_id)
+#         db.add(db_user)
+#         db.commit()
+#         db.refresh(db_user)
+#     return db_user
 
 
 @app.api_route("/proxy/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
