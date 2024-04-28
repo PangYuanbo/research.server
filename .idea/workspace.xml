@@ -6,12 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e0438344-ddf1-46d0-920c-536bd40c7791" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/getresearch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/getresearch.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/db/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/db/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/db/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/routers/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/routers/application.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/routers/researchdate.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/routers/researchdate.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/routers/userdata.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/routers/userdata.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +23,9 @@
   &quot;associatedIndex&quot;: 1
 }</component>
   <component name="ProjectId" id="2fiaFgWS9kSn1esoAY4hsqwKLlP" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -102,6 +103,6 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/getresearch$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1714297400907" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/getresearch$Unnamed.coverage" NAME="Unnamed Coverage Results" MODIFIED="1714301929173" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

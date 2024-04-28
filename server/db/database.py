@@ -1,9 +1,13 @@
+import os
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+load_dotenv()
 
 # 定义数据库连接字符串
-DATABASE_URL = "postgresql://hackdavis:12351419@localhost:5432/postgres"
+DATABASE_URL = os.getenv("DB")
 
 # 创建数据库引擎
 engine = create_engine(DATABASE_URL)

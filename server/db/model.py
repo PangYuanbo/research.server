@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, Text, DateTime, text
+from sqlalchemy import Boolean, Column, Integer, String, Text, DateTime, text, create_engine, MetaData
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from .database import Base
@@ -41,15 +41,11 @@ class Research(Base):
     time = Column(DateTime(True), server_default=text("now()"))
 
 
-
 class Application(Base):
     __tablename__ = 'application'
     id = Column(UUID(as_uuid=True), primary_key=True)
     research_id = Column(UUID(as_uuid=True))
     student_id = Column(UUID(as_uuid=True))
     status = Column(Integer)
-    letter= Column(Text)
+    letter = Column(Text)
     time = Column(DateTime(True), server_default=text("now()"))
-
-
-
