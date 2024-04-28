@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, Integer, String, Text
+from sqlalchemy import Boolean, Column, Integer, String, Text, DateTime, text
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from .database import Base
@@ -25,6 +25,8 @@ class User(Base):
     research_area = Column(Integer)
     middlename = Column(Text)
     university = Column(Text)
+    time = Column(DateTime(True), server_default=text("now()"))
+
 
 class Research(Base):
     __tablename__ = 'research'
@@ -36,6 +38,8 @@ class Research(Base):
     location = Column(Text)
     univercity = Column(Text)
     isfulltime = Column(Boolean)
+    time = Column(DateTime(True), server_default=text("now()"))
+
 
 
 class Application(Base):
@@ -45,5 +49,7 @@ class Application(Base):
     student_id = Column(UUID(as_uuid=True))
     status = Column(Integer)
     letter= Column(Text)
+    time = Column(DateTime(True), server_default=text("now()"))
+
 
 
