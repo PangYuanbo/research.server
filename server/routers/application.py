@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from ..db import schemas, crud, database, model
 from ..db.dependencies import get_db
-
+from sqlalchemy import desc
 
 router = APIRouter()
 
@@ -99,13 +99,13 @@ def accept_application(
 
 @router.get("/applications/", response_model=List[schemas.ApplicationSchema])
 def read_applications(
-        page: int = Query(1, ge=1, alias="page"),  # ge=1 确保页码不小于1
-        page_size: int = Query(10, ge=1, alias="page_size"),  # ge=1 确保每页大小不小于1
-        db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, alias="page"),  # 确保页码不小于1
+    page_size: int = Query(10, ge=1, alias="page_size"),  # 确保每页大小不小于1
+    db: Session = Depends(get_db),
 ):
     # 计算跳过的记录数
     skip = (page - 1) * page_size
-    # 查询数据库获取分页数据
-    applications = db.query(model.Application).offset(skip).limit(page_size).all()
+    # 查询数据库获取分页数据，按 created_at 字段倒序排列
+    applications = crud.get_applications(db, skip=skip, limit=page_size)
     return applications
 

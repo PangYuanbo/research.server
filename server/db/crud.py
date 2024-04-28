@@ -1,6 +1,8 @@
 # crud.py
 from fastapi import HTTPException
 from typing import List
+
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from .model import User, Research, Application
 from .schemas import UserCreate, ProfessorUpdate, NonProfessorUpdate, ResearchBase, ResearchCreate, ApplicationSchema, \
@@ -46,7 +48,8 @@ def get_user(db: Session, user_id: UUID):
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(User).offset(skip).limit(limit).all()
+    return db.query(User).order_by(desc(User.time)).offset(skip).limit(limit).all()
+
 
 
 def create_research(db: Session, research_create: ResearchCreate):
@@ -65,8 +68,7 @@ def get_research(db: Session, research_id: UUID) -> Research:
 
 
 def get_researches(db: Session, skip: int = 0, limit: int = 100) -> List[Research]:
-    return db.query(Research).offset(skip).limit(limit).all()
-
+    return db.query(Research).order_by(desc(Research.time)).offset(skip).limit(limit).all()
 
 def apply_for_research(db, research_id, student_id, description):
     db_application = ApplicationCreateSchema(
@@ -86,3 +88,7 @@ def get_researches_by_professor(db: Session, professor_id: UUID, skip: int, limi
     # 查询指定教授ID的研究项目，并进行分页处理
     researches = db.query(Research).filter(Research.professor_id == professor_id).offset(skip).limit(limit).all()
     return researches
+
+def get_applications(db: Session, skip: int, limit: int):
+    # 返回按时间字段倒序排列的申请记录
+    return db.query(Application).order_by(desc(Application.time)).offset(skip).limit(limit).all()
