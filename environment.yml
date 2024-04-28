@@ -5,8 +5,12 @@ dependencies:
   - annotated-types=0.6.0=py38hca03da5_0
   - anyio=4.2.0=py38hca03da5_0
   - ca-certificates=2024.3.11=hca03da5_0
+  - certifi=2024.2.2=py38hca03da5_0
   - exceptiongroup=1.2.0=py38hca03da5_0
   - fastapi=0.103.0=py38hca03da5_0
+  - h11=0.14.0=py38hca03da5_0
+  - httpcore=1.0.2=py38hca03da5_0
+  - httpx=0.26.0=py38hca03da5_0
   - idna=3.4=py38hca03da5_0
   - libcxx=14.0.6=h848a8c0_0
   - libffi=3.4.4=hca03da5_0
@@ -22,15 +26,14 @@ dependencies:
   - sqlite=3.41.2=h80987f9_0
   - starlette=0.27.0=py38hca03da5_0
   - tk=8.6.12=hb8d0fd4_0
-  - typing-extensions=4.9.0=py38hca03da5_1
   - typing_extensions=4.9.0=py38hca03da5_1
   - wheel=0.41.2=py38hca03da5_0
   - xz=5.4.6=h80987f9_0
   - zlib=1.2.13=h5a0b063_0
   - pip:
+      - alembic==1.13.1
       - async-timeout==4.0.3
       - asyncpg==0.29.0
-      - certifi==2024.2.2
       - cffi==1.16.0
       - charset-normalizer==3.3.2
       - click==8.1.7
@@ -39,8 +42,13 @@ dependencies:
       - dnspython==2.6.1
       - email-validator==2.1.1
       - functions==0.7.0
-      - h11==0.14.0
+      - importlib-metadata==7.1.0
+      - importlib-resources==6.4.0
+      - inflect==7.2.1
       - iniconfig==2.0.0
+      - mako==1.3.3
+      - markupsafe==2.1.5
+      - more-itertools==10.2.0
       - packaging==24.0
       - pluggy==1.5.0
       - propelauth-fastapi==2.1.14
@@ -49,10 +57,15 @@ dependencies:
       - pycparser==2.22
       - pyjwt==2.8.0
       - pytest==8.2.0
+      - python-dotenv==1.0.1
       - requests==2.31.0
       - schemas==0.7.1
+      - sqlacodegen==3.0.0rc5
       - sqlalchemy==2.0.29
       - tomli==2.0.1
+      - typeguard==4.2.1
+      - typing-extensions==4.11.0
       - urllib3==2.2.1
       - uvicorn==0.29.0
-prefix: /Users/aaronpang/anaconda3/envs/research
+      - zipp==3.18.1
+prefix: /Users/yanlee/anaconda3/envs/research
