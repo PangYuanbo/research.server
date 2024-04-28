@@ -1,4 +1,6 @@
 from uuid import UUID
+
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
@@ -6,6 +8,7 @@ from ..db import schemas, crud, database, model
 from ..db.dependencies import get_db
 from propelauth_fastapi import init_auth,User
 import os
+load_dotenv()
 AUTH_URL = os.getenv("AUTH_URL")
 API_KEY = os.getenv("API_KEY")
 auth = init_auth(AUTH_URL, API_KEY)

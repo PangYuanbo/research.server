@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI, Depends
 from server.routers import userdata, researchdate, application
 from propelauth_fastapi import init_auth,User
 import os
+load_dotenv()
 AUTH_URL = os.getenv("AUTH_URL")
 API_KEY = os.getenv("API_KEY")
 auth = init_auth(AUTH_URL, API_KEY)

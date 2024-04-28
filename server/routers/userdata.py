@@ -1,13 +1,18 @@
 from typing import List
 from uuid import UUID
 
+from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import os
 from ..db import schemas, crud
 from ..db.dependencies import get_db
 from propelauth_fastapi import init_auth, User
+from ..db import schemas, crud, database, model
 
+from ..db.dependencies import get_db
+from fastapi import FastAPI
+load_dotenv()
 router = APIRouter()
 AUTH_URL = os.getenv("AUTH_URL")
 API_KEY = os.getenv("API_KEY")
