@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # 定义数据库连接字符串
-DATABASE_URL = "postgresql+psycopg2://user:@localhost/dbname"
+DATABASE_URL = "postgresql://admin@localhost:5432/postgres"
 
 # 创建数据库引擎
 engine = create_engine(DATABASE_URL)
