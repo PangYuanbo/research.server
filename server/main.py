@@ -1,8 +1,9 @@
+import json
 import os
 
 import httpx
 from dotenv import load_dotenv
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi import Request
 from fastapi.responses import Response
 from propelauth_fastapi import init_auth, User as AuthUser
@@ -49,33 +50,44 @@ async def read_users_me(current_user: AuthUser = Depends(auth.require_user), db:
 
 
 @app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
-# 动态路径，可以捕获任何 '/...' 的请求
 async def proxy_request(path: str, request: Request, current_user: AuthUser = Depends(auth.require_user)):
-    # 目标URL，将请求转发到此URL
     target_url = f"{PROXY_URL}/{path}"
-    # 创建异步客户端
+
     async with httpx.AsyncClient() as client:
-        # 获取原始请求体
+        # 尝试获取请求体，可能为空
         body = await request.body()
 
-        # 获取原始请求头部并去除一些不适合转发的头部
+        # 准备请求头
         headers = dict(request.headers)
-        headers.pop("host", None)  # 不转发host头部，因为这会导致问题
-        headers.pop("content-length", None)  # 让 httpx 自动计算
+        headers.pop("host", None)
+        headers.pop("content-length", None)  # httpx 自动计算内容长度
 
-        # 发送请求到目标URL
-        response = await client.request(
-            method=request.method,
-            url=target_url,
-            headers=headers,
-            content=body,
-            # 转发查询参数并且拼接 current_user.user_id 作为查询参数
-            params={**request.query_params, "user_id": current_user.user_id},
-        )
+        # 检查内容类型是否为 JSON 并处理
+        content_type = headers.get("content-type", "")
+        if "application/json" in content_type:
+            try:
+                # 解码原始请求体并转换为 JSON 对象
+                data = json.loads(body.decode())
+                # 添加 current_user.user_id
+                data["user_id"] = current_user.user_id
+                # 重新编码修改后的 JSON 对象为请求体
+                body = json.dumps(data).encode()
+            except json.JSONDecodeError:
+                raise HTTPException(status_code=400, detail="Invalid JSON body")
 
-        # 返回从目标URL获取的响应
-        return Response(content=response.content, status_code=response.status_code, headers=dict(response.headers))
-
+        try:
+            # 发送修改后的请求到目标URL
+            response = await client.request(
+                method=request.method,
+                url=target_url,
+                headers=headers,
+                content=body,
+                params={**request.query_params, "user_id": current_user.user_id},
+            )
+            # 返回从目标URL获取的响应
+            return Response(content=response.content, status_code=response.status_code, headers=dict(response.headers))
+        except httpx.RequestError as exc:
+            raise HTTPException(status_code=500, detail=f"An error occurred while requesting {target_url}. {str(exc)}")
 # app.include_router(userdata.router)
 # app.include_router(researchdate.router)
 # app.include_router(application.router)
