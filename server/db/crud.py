@@ -3,7 +3,8 @@ from fastapi import HTTPException
 from psycopg2._psycopg import List
 from sqlalchemy.orm import Session
 from .model import User, Research
-from .schemas import UserCreate, ProfessorUpdate, NonProfessorUpdate, ResearchBase, ResearchCreate
+from .schemas import UserCreate, ProfessorUpdate, NonProfessorUpdate, ResearchBase, ResearchCreate, ApplicationSchema, \
+    ApplicationCreateSchema
 from uuid import UUID, uuid4
 
 
@@ -53,9 +54,6 @@ def create_research(db: Session, research_create: ResearchCreate, professor_id: 
         id=uuid4(),
         research=research_create.research,
         professor_id=professor_id,
-        application=research_create.application,
-        applied=research_create.applied,
-        refused=research_create.refused
     )
     db.add(db_research)
     db.commit()
@@ -70,17 +68,18 @@ def get_research(db: Session, research_id: UUID) -> Research:
 def get_researches(db: Session, skip: int = 0, limit: int = 100) -> List[Research]:
     return db.query(Research).offset(skip).limit(limit).all()
 
-def apply_for_research(db: Session, research_id: UUID, user_id: UUID) -> Research:
-    db_research = db.query(Research).filter(Research.id == research_id).first()
-    if db_research:
-        if db_research.application:
-            # If there's already an application string, append the new user_id
-            db_research.application += f",{str(user_id)}"
-        else:
-            # If the application column is empty, start with the current user_id
-            db_research.application = str(user_id)
-        db.commit()
-        db.refresh(db_research)
-        return db_research
-    else:
-        return None
+
+def apply_for_research(db, research_id, student_id, description):
+    db_application = ApplicationCreateSchema(
+        research_id=research_id,
+        student_id=student_id,
+        status=0,
+        letter=description
+    )
+    db.add(db_application)
+    db.commit()
+    db.refresh(db_application)
+    return db_application
+
+
+# database.py

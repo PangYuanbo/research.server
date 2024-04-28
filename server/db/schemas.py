@@ -76,11 +76,14 @@ class User(UserBase):
         orm_mode = True
 class ResearchBase(BaseModel):
     # This will be the base class with shared attributes
-    research: Optional[int] = None
+    title: Optional[str] = None
     professor_id: Optional[UUID4] = None
-    application: Optional[str] = None
-    applied: Optional[str] = None
-    refused: Optional[str] = None
+    description: Optional[str] = None
+    money: Optional[int] = None
+    location: Optional[str] = None
+    university: Optional[str] = None
+    isfulltime: Optional[bool] = None
+
 
 class ResearchCreate(ResearchBase):
     # Attributes required for creation can be added here
@@ -97,3 +100,27 @@ class ResearchInDB(ResearchBase):
 
     class Config:
         orm_mode = True
+
+class ApplicationSchema(BaseModel):
+    id: UUID4
+    research_id: UUID4
+    student_id: UUID4
+    status: int
+    letter: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+# 如果你需要一个用于创建新应用程序实例的schema（不包括id字段，因为它是自动生成的）
+class ApplicationCreateSchema(BaseModel):
+    research_id: UUID4
+    student_id: UUID4
+    status: int
+    letter: Optional[str]
+
+# 如果你需要一个用于更新应用程序实例的schema
+class ApplicationUpdateSchema(BaseModel):
+    research_id: Optional[UUID4]
+    student_id: Optional[UUID4]
+    status: Optional[int]
+    letter: Optional[str]

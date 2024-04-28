@@ -29,9 +29,21 @@ class User(Base):
 class Research(Base):
     __tablename__ = 'research'
     id = Column(UUID(as_uuid=True), primary_key=True)
-    research = Column(Integer, index=True)
+    title = Column(Text, index=True)
     professor_id = Column(UUID(as_uuid=True))
-    application = Column(Text)
-    applied = Column(Text)
-    refused = Column(Text)
+    description = Column(Text)
+    money = Column(Integer)
+    location = Column(Text)
+    univercity = Column(Text)
+    isfulltime = Column(Boolean)
+
+
+class Application(Base):
+    __tablename__ = 'application'
+    id = Column(UUID(as_uuid=True), primary_key=True)
+    research_id = Column(UUID(as_uuid=True))
+    student_id = Column(UUID(as_uuid=True))
+    status = Column(int)
+    letter= Column(Text)
+
 
