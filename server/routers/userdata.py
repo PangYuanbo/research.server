@@ -3,17 +3,21 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
+import os
 from ..db import schemas, crud
 from ..db.dependencies import get_db
+from propelauth_fastapi import init_auth, User
 
 router = APIRouter()
+AUTH_URL = os.getenv("AUTH_URL")
+API_KEY = os.getenv("API_KEY")
+auth = init_auth(AUTH_URL, API_KEY)
 
 
 @router.post("/users_create/", response_model=schemas.User)
-def create_new_user(user_id: schemas.UserCreate, db: Session = Depends(get_db)):
+def create_new_user(current_user: User = Depends(auth.require_user), db: Session = Depends(get_db)):
     try:
-        db_user = crud.create_user(db=db, user_id=user_id.id)
+        db_user = crud.create_user(db=db, user_id=current_user.user_id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     return db_user
