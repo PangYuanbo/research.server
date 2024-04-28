@@ -29,7 +29,7 @@ app.add_middleware(
 )
 
 
-@app.get("/research/search")
+@app.post("/research/search")
 async def search_researches(need: str, research: str):
     return ai_search.ai_research(need, research)
 
