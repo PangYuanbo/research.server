@@ -3,8 +3,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
-from db import schemas, crud, database, model
-from db.dependencies import get_db
+from ..db import schemas, crud, database, model
+from ..db.dependencies import get_db
 
 
 router = APIRouter()
