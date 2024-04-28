@@ -49,7 +49,7 @@ async def read_users_me(current_user: AuthUser = Depends(auth.require_user), db:
     return db_user
 
 
-@app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
+@app.api_route("/proxy/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def proxy_request(path: str, request: Request, current_user: AuthUser = Depends(auth.require_user)):
     target_url = f"{PROXY_URL}/{path}"
 
@@ -88,6 +88,46 @@ async def proxy_request(path: str, request: Request, current_user: AuthUser = De
             return Response(content=response.content, status_code=response.status_code, headers=dict(response.headers))
         except httpx.RequestError as exc:
             raise HTTPException(status_code=500, detail=f"An error occurred while requesting {target_url}. {str(exc)}")
+
+
+@app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
+async def proxy_request(path: str, request: Request):
+    target_url = f"{PROXY_URL}/{path}"
+
+    async with httpx.AsyncClient() as client:
+        # 尝试获取请求体，可能为空
+        body = await request.body()
+
+        # 准备请求头
+        headers = dict(request.headers)
+        headers.pop("host", None)
+        headers.pop("content-length", None)  # httpx 自动计算内容长度
+
+        # 检查内容类型是否为 JSON 并处理
+        content_type = headers.get("content-type", "")
+        if "application/json" in content_type:
+            try:
+                # 解码原始请求体并转换为 JSON 对象
+                data = json.loads(body.decode())
+                # 重新编码修改后的 JSON 对象为请求体
+                body = json.dumps(data).encode()
+            except json.JSONDecodeError:
+                raise HTTPException(status_code=400, detail="Invalid JSON body")
+
+        try:
+            # 发送修改后的请求到目标URL
+            response = await client.request(
+                method=request.method,
+                url=target_url,
+                headers=headers,
+                content=body,
+                params=request.query_params,
+            )
+            # 返回从目标URL获取的响应
+            return Response(content=response.content, status_code=response.status_code, headers=dict(response.headers))
+        except httpx.RequestError as exc:
+            raise HTTPException(status_code=500, detail=f"An error occurred while requesting {target_url}. {str(exc)}")
+
 # app.include_router(userdata.router)
 # app.include_router(researchdate.router)
 # app.include_router(application.router)
