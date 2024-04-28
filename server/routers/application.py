@@ -1,13 +1,16 @@
+import os
+from typing import List
 from uuid import UUID
 
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException, Query
+from propelauth_fastapi import init_auth
+from propelauth_py.user import User
 from sqlalchemy.orm import Session
-from typing import List
-from ..db import schemas, crud, database, model
+
+from ..db import schemas, crud
 from ..db.dependencies import get_db
-from propelauth_fastapi import init_auth,User
-import os
+
 load_dotenv()
 AUTH_URL = os.getenv("AUTH_URL")
 API_KEY = os.getenv("API_KEY")
@@ -25,10 +28,10 @@ def apply_for_research(
     """
     Allows a user to apply for a research by appending their user_id to the application column.
     """
-    user_id=current_user.user_id
+    user_id = current_user.user_id
     db_user = crud.get_user(db=db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Users not found")
     if db_user.professor:
         raise HTTPException(status_code=403, detail="Permission denied,Not a student")
     student_id = db_user.id
@@ -56,7 +59,7 @@ def accept_application(
     """
     db_user = crud.get_user(db=db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Users not found")
     if db_user.professor:
         """
         Does the professor have this research
@@ -92,7 +95,7 @@ def accept_application(
     """
     db_user = crud.get_user(db=db, user_id=user_id)
     if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="Users not found")
     if db_user.professor:
         """
         Does the professor have this research
@@ -113,13 +116,12 @@ def accept_application(
 
 @router.get("/applications/", response_model=List[schemas.ApplicationSchema])
 def read_applications(
-    page: int = Query(1, ge=1, alias="page"),  # 确保页码不小于1
-    page_size: int = Query(10, ge=1, alias="page_size"),  # 确保每页大小不小于1
-    db: Session = Depends(get_db),
+        page: int = Query(1, ge=1, alias="page"),  # 确保页码不小于1
+        page_size: int = Query(10, ge=1, alias="page_size"),  # 确保每页大小不小于1
+        db: Session = Depends(get_db),
 ):
     # 计算跳过的记录数
     skip = (page - 1) * page_size
     # 查询数据库获取分页数据，按 created_at 字段倒序排列
     applications = crud.get_applications(db, skip=skip, limit=page_size)
     return applications
-

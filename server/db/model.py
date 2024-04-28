@@ -1,51 +1,69 @@
-from sqlalchemy import Boolean, Column, Integer, String, Text, DateTime, text, create_engine, MetaData
-from sqlalchemy.dialects.postgresql import UUID
+import datetime
 import uuid
-from .database import Base
+from typing import Optional
+
+from sqlalchemy import Boolean, DateTime, Integer, PrimaryKeyConstraint, Text, Uuid, text
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
-class User(Base):
-    __tablename__ = 'User'  # Assuming the actual table name is 'users'
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(Text)
-    professor = Column(Boolean)
-    lastname = Column(Text)
-    firstname = Column(Text)
-    gender = Column(Text)
-    pronounce = Column(Text)
-    biography = Column(Text)
-    eduemail = Column(Text)
-    phonenumber = Column(Integer)
-    personal_homepage = Column(Text)
-    featured_publications = Column(Text)
-    award_honor = Column(Text)
-    department = Column(Text)
-    photo = Column(Text)
-    research_area = Column(Integer)
-    middlename = Column(Text)
-    university = Column(Text)
-    time = Column(DateTime(True), server_default=text("now()"))
-
-
-class Research(Base):
-    __tablename__ = 'research'
-    id = Column(UUID(as_uuid=True), primary_key=True)
-    title = Column(Text, index=True)
-    professor_id = Column(UUID(as_uuid=True))
-    description = Column(Text)
-    money = Column(Integer)
-    location = Column(Text)
-    univercity = Column(Text)
-    isfulltime = Column(Boolean)
-    time = Column(DateTime(True), server_default=text("now()"))
+class Base(DeclarativeBase):
+    pass
 
 
 class Application(Base):
     __tablename__ = 'application'
-    id = Column(UUID(as_uuid=True), primary_key=True)
-    research_id = Column(UUID(as_uuid=True))
-    student_id = Column(UUID(as_uuid=True))
-    status = Column(Integer)
-    letter = Column(Text)
-    time = Column(DateTime(True), server_default=text("now()"))
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='application_pkey'),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, server_default=text('gen_random_uuid()'))
+    research_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid)
+    student_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid)
+    status: Mapped[Optional[int]] = mapped_column(Integer)
+    letter: Mapped[Optional[str]] = mapped_column(Text)
+    time: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime(True), server_default=text('now()'))
+
+
+class Research(Base):
+    __tablename__ = 'research'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='research_pkey'),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, server_default=text('gen_random_uuid()'))
+    title: Mapped[Optional[str]] = mapped_column(Text)
+    professor_id: Mapped[Optional[uuid.UUID]] = mapped_column(Uuid)
+    description: Mapped[Optional[str]] = mapped_column(Text)
+    money: Mapped[Optional[int]] = mapped_column(Integer)
+    location: Mapped[Optional[str]] = mapped_column(Text)
+    univercity: Mapped[Optional[str]] = mapped_column(Text)
+    isfulltime: Mapped[Optional[bool]] = mapped_column(Boolean)
+    time: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime(True), server_default=text('now()'))
+
+
+class Users(Base):
+    __tablename__ = 'users'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='users_pkey'),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, server_default=text('gen_random_uuid()'))
+    name: Mapped[Optional[str]] = mapped_column(Text)
+    professor: Mapped[Optional[bool]] = mapped_column(Boolean)
+    lastname: Mapped[Optional[str]] = mapped_column(Text)
+    firstname: Mapped[Optional[str]] = mapped_column(Text)
+    gender: Mapped[Optional[str]] = mapped_column(Text)
+    pronounce: Mapped[Optional[str]] = mapped_column(Text)
+    biography: Mapped[Optional[str]] = mapped_column(Text)
+    eduemail: Mapped[Optional[str]] = mapped_column(Text)
+    phonenumber: Mapped[Optional[int]] = mapped_column(Integer)
+    personal_homepage: Mapped[Optional[str]] = mapped_column(Text)
+    featured_publications: Mapped[Optional[str]] = mapped_column(Text)
+    award_honor: Mapped[Optional[str]] = mapped_column(Text)
+    department: Mapped[Optional[str]] = mapped_column(Text)
+    photo: Mapped[Optional[str]] = mapped_column(Text)
+    research_area: Mapped[Optional[int]] = mapped_column(Integer)
+    middlename: Mapped[Optional[str]] = mapped_column(Text)
+    university: Mapped[Optional[str]] = mapped_column(Text)
+    time: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime(True), server_default=text('now()'))
+    user_id: Mapped[Optional[str]] = mapped_column(Text)
