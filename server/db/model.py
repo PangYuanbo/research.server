@@ -25,3 +25,13 @@ class User(Base):
     research_area = Column(Integer)
     middlename = Column(Text)
     university = Column(Text)
+
+class Research(Base):
+    __tablename__ = 'research'
+    id = Column(UUID(as_uuid=True), primary_key=True)
+    research = Column(Integer, index=True)
+    professor_id = Column(UUID(as_uuid=True))
+    application = Column(Text)
+    applied = Column(Text)
+    refused = Column(Text)
+

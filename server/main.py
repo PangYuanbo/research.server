@@ -2,9 +2,8 @@
 from fastapi import FastAPI
 from propelauth_fastapi import init_auth
 import os
-from server.routers import data
-
-
+from server.routers import userdata, researchdate
 
 app= FastAPI()
-app.include_router(data.router)
+app.include_router(userdata.router)
+app.include_router(researchdate.router)

@@ -1,8 +1,8 @@
 # crud.py
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from .model import User
-from .schemas import  UserCreate, ProfessorUpdate, NonProfessorUpdate
+from .model import User, Research
+from .schemas import UserCreate, ProfessorUpdate, NonProfessorUpdate, ResearchBase, ResearchCreate
 from uuid import UUID, uuid4
 
 
@@ -45,3 +45,19 @@ def get_user(db: Session, user_id: UUID):
 
 def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(User).offset(skip).limit(limit).all()
+
+
+def create_research(db: Session, research_create: ResearchCreate, professor_id: UUID):
+    db_research = Research(
+        id=uuid4(),
+        research=research_create.research,
+        professor_id=professor_id,
+        application=research_create.application,
+        applied=research_create.applied,
+        refused=research_create.refused
+    )
+    db.add(db_research)
+    db.commit()
+    db.refresh(db_research)
+    return db_research
+
