@@ -23,8 +23,9 @@ def update_user(db: Session, user_id: UUID, user_update: dict):
     return db_user
 
 
-def create_user(db: Session, user_create: UserCreate):
-    db_user = User(id=uuid4(), **user_create.dict(exclude_unset=True))
+def create_user(db: Session, user_id: UUID):
+    # 创建一个User对象，其中id是由调用者提供的UUID，其他字段保留默认值
+    db_user = User(id=user_id)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

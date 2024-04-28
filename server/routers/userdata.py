@@ -11,8 +11,11 @@ router = APIRouter()
 
 
 @router.post("/users_create/", response_model=schemas.User)
-def create_new_user(user_create: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.create_user(db=db, user_create=user_create)
+def create_new_user(user_id: schemas.UserCreate, db: Session = Depends(get_db)):
+    try:
+        db_user = crud.create_user(db=db, user_id=user_id.id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
     return db_user
 
 

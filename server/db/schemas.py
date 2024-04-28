@@ -25,8 +25,7 @@ class UserBase(BaseModel):
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
-    name: str
-    professor: bool
+    id: UUID4
 
 
 # Properties to receive via API on update
