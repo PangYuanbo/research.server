@@ -3,18 +3,29 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List
+import os
 from ..db import schemas, crud, database, model
 from ..db.dependencies import get_db
+from propelauth_fastapi import init_auth, User
 
+router = APIRouter()
+AUTH_URL = os.getenv("AUTH_URL")
+API_KEY = os.getenv("API_KEY")
+auth = init_auth(AUTH_URL, API_KEY)
 
 router = APIRouter()
 
 
-@router.post("/research/", response_model=schemas.ResearchBase)
+@router.post("/research/create", response_model=schemas.ResearchBase)
 def create_research_entry(
         research: schemas.ResearchCreate,
+        current_user: User = Depends(auth.require_user),
         db: Session = Depends(get_db)
 ):
+    user_id = current_user.user_id
+    db_user = crud.get_user(db=db, user_id=user_id)
+    if not db_user.professor:
+        raise HTTPException(status_code=403, detail="Permission denied,Not a professor")
     return crud.create_research(db=db, research_create=research)
 
 

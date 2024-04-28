@@ -23,7 +23,7 @@ def create_new_user(current_user: User = Depends(auth.require_user), db: Session
     return db_user
 
 
-@router.post("/users/{user_id}", response_model=schemas.User)
+@router.post("/users/update", response_model=schemas.User)
 def update_user(user_id: UUID, db: Session = Depends(get_db)):
     db_user = crud.get_user(db=db, user_id=user_id)
     if db_user is None:
