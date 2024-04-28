@@ -49,11 +49,10 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(User).offset(skip).limit(limit).all()
 
 
-def create_research(db: Session, research_create: ResearchCreate, professor_id: UUID):
+def create_research(db: Session, research_create: ResearchCreate):
     db_research = Research(
         id=uuid4(),
-        research=research_create.research,
-        professor_id=professor_id,
+        **research_create.dict(exclude_unset=True),
     )
     db.add(db_research)
     db.commit()
@@ -83,3 +82,7 @@ def apply_for_research(db, research_id, student_id, description):
 
 
 # database.py
+def get_researches_by_professor(db: Session, professor_id: UUID, skip: int, limit: int):
+    # 查询指定教授ID的研究项目，并进行分页处理
+    researches = db.query(Research).filter(Research.professor_id == professor_id).offset(skip).limit(limit).all()
+    return researches
