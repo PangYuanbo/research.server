@@ -3,17 +3,12 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from ..db.crud import get_researches_all, search_researches_by_ids
-from ..db.dependencies import get_db
-
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI()
-db = get_db()
-researches = get_researches_all(db)
+client = OpenAI(api_key=api_key)
 
 
-def ai_research(need: str):
+def ai_research(need: str, researches: str):
     messages = [{"role": "user", "content": need},
                 {"role": "system",
                  "content": "Match the user's request based on the information related to the RESEARCH in the "
@@ -46,4 +41,4 @@ def ai_research(need: str):
         tools=tools,
         tool_choice="auto",  # auto is default, but we'll be explicit
     )
-    return search_researches_by_ids(response.choices[0].message.content)
+    return response.choices[0].message.content

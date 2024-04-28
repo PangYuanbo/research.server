@@ -9,6 +9,8 @@ from fastapi.responses import Response
 from propelauth_fastapi import init_auth, User as AuthUser
 from starlette.middleware.cors import CORSMiddleware
 
+from server.search import ai_search
+
 load_dotenv()
 AUTH_URL = os.getenv("AUTH_URL")
 API_KEY = os.getenv("API_KEY")
@@ -25,6 +27,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.get("/research/search")
+async def search_researches(need: str, research: str):
+    return ai_search.ai_research(need, research)
 
 
 # @app.get("/")
