@@ -1,8 +1,8 @@
 # crud.py
 from fastapi import HTTPException
-from psycopg2._psycopg import List
+from typing import List
 from sqlalchemy.orm import Session
-from .model import User, Research
+from .model import User, Research, Application
 from .schemas import UserCreate, ProfessorUpdate, NonProfessorUpdate, ResearchBase, ResearchCreate, ApplicationSchema, \
     ApplicationCreateSchema
 from uuid import UUID, uuid4

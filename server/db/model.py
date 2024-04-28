@@ -43,7 +43,7 @@ class Application(Base):
     id = Column(UUID(as_uuid=True), primary_key=True)
     research_id = Column(UUID(as_uuid=True))
     student_id = Column(UUID(as_uuid=True))
-    status = Column(int)
+    status = Column(Integer)
     letter= Column(Text)
 
 

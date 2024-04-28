@@ -6,7 +6,6 @@ from typing import List
 
 from server.db import schemas, crud, database, model
 
-from server.db import schemas
 from server.db.dependencies import get_db
 from fastapi import FastAPI
 
